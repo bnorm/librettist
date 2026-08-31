@@ -50,9 +50,15 @@ fun diff(
         val state = statesC[index]
         val nextState = statesC[index + 1]
         if (state is State.Match && nextState == State.Empty) {
-            val nextToken = current.getOrNull(index + 1)
-            val nextPreviousToken = previous.getOrNull(state.previousIdx + 1)
-            if (nextPreviousToken != null && nextToken == nextPreviousToken) {
+            val nextIndex = index + 1
+            val nextPreviousIndex = state.previousIdx + 1
+            val nextToken = current.getOrNull(nextIndex)
+            val nextPreviousToken = previous.getOrNull(nextPreviousIndex)
+            if (nextPreviousToken != null &&
+                nextToken == nextPreviousToken &&
+                statesC[nextIndex] == State.Empty &&
+                statesP[nextPreviousIndex] == State.Empty
+            ) {
                 val match = State.Match(
                     previous = nextPreviousToken,
                     previousIdx = state.previousIdx + 1,
@@ -69,9 +75,15 @@ fun diff(
         val state = statesC[index]
         val priorState = statesC[index - 1]
         if (state is State.Match && priorState == State.Empty) {
-            val priorToken = current.getOrNull(index - 1)
-            val priorPreviousToken = previous.getOrNull(state.previousIdx - 1)
-            if (priorToken != null && priorToken == priorPreviousToken) {
+            val priorIndex = index - 1
+            val nextPriorIndex = state.previousIdx - 1
+            val priorToken = current.getOrNull(priorIndex)
+            val priorPreviousToken = previous.getOrNull(nextPriorIndex)
+            if (priorToken != null &&
+                priorToken == priorPreviousToken &&
+                statesC[priorIndex] == State.Empty &&
+                statesP[nextPriorIndex] == State.Empty
+            ) {
                 val match = State.Match(
                     previous = priorPreviousToken,
                     previousIdx = state.previousIdx - 1,
